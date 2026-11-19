@@ -21,4 +21,5 @@ class SessionManager(context: Context) {
     fun getRole(): String = prefs.getString("role", "") ?: ""
     fun isLoggedIn(): Boolean = !getToken().isNullOrEmpty()
     fun clear() = prefs.edit().clear().apply()
+    fun getEmail(): String = prefs.getString("email", "") ?: ""
 }

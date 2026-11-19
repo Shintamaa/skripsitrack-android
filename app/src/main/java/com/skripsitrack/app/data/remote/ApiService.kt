@@ -12,4 +12,7 @@ interface ApiService {
 
     @GET("me")
     suspend fun me(): ApiResponse<User>
+
+    @GET("dashboard")
+    suspend fun dashboard(): ApiResponse<DashboardData>
 }
