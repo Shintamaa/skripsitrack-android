@@ -57,3 +57,35 @@ data class DashboardData(
     val deadline_terdekat: ThesisStage?,
     val aktivitas_terbaru: List<ActivityLog>
 )
+
+data class UserMini(
+    val id: Int,
+    val name: String,
+    val nim_nidn: String? = null
+)
+
+data class Thesis(
+    val id: Int,
+    val student_id: Int,
+    val supervisor_id: Int,
+    val title: String,
+    val description: String?,
+    val status: String,
+    val start_date: String?,
+    val target_date: String?,
+    val student: UserMini?,
+    val supervisor: UserMini?,
+    val stages_count: Int?,
+    val done_stages_count: Int?,
+    val stages: List<ThesisStage>?
+)
+
+// Field null tidak ikut terkirim (Gson membuang null), jadi satu class cukup untuk tambah dan ubah
+data class ThesisRequest(
+    val supervisor_id: Int? = null,
+    val title: String? = null,
+    val description: String? = null,
+    val start_date: String? = null,
+    val target_date: String? = null,
+    val status: String? = null
+)

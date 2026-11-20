@@ -9,6 +9,8 @@ import com.skripsitrack.app.R
 import com.skripsitrack.app.SkripsiApp
 import com.skripsitrack.app.databinding.ActivityMainBinding
 import com.skripsitrack.app.ui.auth.LoginActivity
+import com.skripsitrack.app.util.redirectToLogin
+import com.skripsitrack.app.ui.thesis.ThesisListFragment
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -26,8 +28,7 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNav.setOnItemSelectedListener { item ->
             val fragment: Fragment = when (item.itemId) {
                 R.id.nav_dashboard -> DashboardFragment()
-                R.id.nav_thesis -> PlaceholderFragment.newInstance(
-                    if (isDosen) "Daftar Bimbingan" else "Daftar Skripsi", "Dibuat di Bagian 3")
+                R.id.nav_thesis -> ThesisListFragment()
                 R.id.nav_activity -> PlaceholderFragment.newInstance(
                     "Riwayat Aktivitas", "Dibuat di Bagian 6")
                 else -> ProfileFragment()
@@ -43,13 +44,5 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /** Hapus sesi lalu kembali ke Login. Dipakai saat logout dan saat token kedaluwarsa (401). */
-    fun forceLogout(message: String? = null) {
-        SkripsiApp.session.clear()
-        message?.let { Toast.makeText(this, it, Toast.LENGTH_LONG).show() }
-        startActivity(
-            Intent(this, LoginActivity::class.java)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        )
-    }
+    fun forceLogout(message: String? = null) = redirectToLogin(message)
 }
