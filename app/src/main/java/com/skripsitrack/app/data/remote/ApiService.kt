@@ -2,6 +2,10 @@ package com.skripsitrack.app.data.remote
 
 import com.skripsitrack.app.data.model.*
 import retrofit2.http.*
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
+import com.skripsitrack.app.data.model.ThesisStage
+import com.skripsitrack.app.data.model.Submission
 
 interface ApiService {
     @POST("login")
@@ -36,4 +40,15 @@ interface ApiService {
 
     @DELETE("theses/{id}")
     suspend fun deleteThesis(@Path("id") id: Int): ApiResponse<Unit>
+
+    @GET("stages/{id}")
+    suspend fun stageDetail(@Path("id") id: Int): ApiResponse<ThesisStage>
+
+    @Multipart
+    @POST("stages/{id}/submissions")
+    suspend fun uploadSubmission(
+        @Path("id") id: Int,
+        @Part file: MultipartBody.Part,
+        @Part("note") note: RequestBody?
+    ): ApiResponse<Submission>
 }

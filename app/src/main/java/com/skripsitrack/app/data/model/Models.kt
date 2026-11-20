@@ -31,7 +31,10 @@ data class ThesisStage(
     val sort_order: Int,
     val target_date: String?,
     val completed_at: String?,
-    val status: String
+    val status: String,
+    val submissions_count: Int? = null,
+    val submissions: List<Submission>? = null,
+    val thesis: Thesis? = null
 )
 
 data class ActivityUser(
@@ -89,3 +92,28 @@ data class ThesisRequest(
     val target_date: String? = null,
     val status: String? = null
 )
+
+data class CommentUser(val id: Int, val name: String, val role: String?)
+
+data class Comment(
+    val id: Int,
+    val submission_id: Int,
+    val user_id: Int,
+    val body: String,
+    val created_at: String,
+    val user: CommentUser?
+)
+
+data class Submission(
+    val id: Int,
+    val stage_id: Int,
+    val version: Int,
+    val file_path: String,
+    val file_type: String,
+    val file_url: String?,
+    val note: String?,
+    val status: String,
+    val created_at: String,
+    val comments: List<Comment>? = null
+)
+

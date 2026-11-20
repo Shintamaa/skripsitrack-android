@@ -24,8 +24,9 @@ object RetrofitClient {
             chain.proceed(builder.build())
         }
         .addInterceptor(HttpLoggingInterceptor().apply {
-            level = HttpLoggingInterceptor.Level.BODY
+            level = HttpLoggingInterceptor.Level.HEADERS
         })
+        .writeTimeout(60, TimeUnit.SECONDS)
         .build()
 
     val api: ApiService by lazy {

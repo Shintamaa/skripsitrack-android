@@ -50,6 +50,14 @@
             android:name=".ui.thesis.ThesisFormActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".ui.thesis.ThesisDetailActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.thesis.StageActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

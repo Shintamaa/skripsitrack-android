@@ -45,4 +45,16 @@ object DateUtil {
         "buat_skripsi" -> "Skripsi"
         else -> action
     }
+
+    /** Teks peringatan deadline; null jika tidak perlu ditampilkan. */
+    fun deadlineInfo(status: String, target: String?): String? {
+        if (status == "selesai") return null
+        val d = daysUntil(target) ?: return null
+        return when {
+            d < 0L -> "Terlambat ${-d} hari"
+            d == 0L -> "Deadline hari ini"
+            d <= 7L -> "$d hari lagi"
+            else -> null
+        }
+    }
 }

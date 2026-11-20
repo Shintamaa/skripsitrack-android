@@ -49,8 +49,10 @@ class ThesisListFragment : Fragment() {
         adapter = ThesisAdapter(
             isDosen,
             onClick = {
-                Toast.makeText(requireContext(),
-                    "Detail dan timeline dibuat di Bagian 4", Toast.LENGTH_SHORT).show()
+                formLauncher.launch(
+                    Intent(requireContext(), ThesisDetailActivity::class.java)
+                        .putExtra("thesis_id", it.id)
+                )
             },
             onEdit = { openForm(it) },
             onDelete = { confirmDelete(it) }
