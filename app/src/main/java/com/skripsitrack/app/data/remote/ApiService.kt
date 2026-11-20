@@ -6,6 +6,11 @@ import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import com.skripsitrack.app.data.model.ThesisStage
 import com.skripsitrack.app.data.model.Submission
+import com.skripsitrack.app.data.model.Comment
+import com.skripsitrack.app.data.model.CommentRequest
+import com.skripsitrack.app.data.model.ReviewRequest
+import com.skripsitrack.app.data.model.BulkDeleteRequest
+import com.skripsitrack.app.data.model.BulkDeleteResult
 
 interface ApiService {
     @POST("login")
@@ -51,4 +56,16 @@ interface ApiService {
         @Part file: MultipartBody.Part,
         @Part("note") note: RequestBody?
     ): ApiResponse<Submission>
+
+    @POST("submissions/{id}/comments")
+    suspend fun addComment(@Path("id") id: Int, @Body body: CommentRequest): ApiResponse<Comment>
+
+    @PATCH("submissions/{id}/status")
+    suspend fun reviewSubmission(@Path("id") id: Int, @Body body: ReviewRequest): ApiResponse<Submission>
+
+    @DELETE("submissions/{id}")
+    suspend fun deleteSubmission(@Path("id") id: Int): ApiResponse<Unit>
+
+    @POST("submissions/bulk-delete")
+    suspend fun bulkDeleteSubmissions(@Body body: BulkDeleteRequest): ApiResponse<BulkDeleteResult>
 }

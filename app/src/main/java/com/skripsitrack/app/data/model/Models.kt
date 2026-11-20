@@ -117,3 +117,20 @@ data class Submission(
     val comments: List<Comment>? = null
 )
 
+data class CommentRequest(
+    val body: String
+)
+
+data class ReviewRequest(
+    val status: String, val comment: String? = null
+)
+
+data class BulkDeleteRequest(
+    val ids: List<Int>
+)
+
+data class BulkDeleteResult(
+    val deleted: Int, val skipped: Int
+)
+
+

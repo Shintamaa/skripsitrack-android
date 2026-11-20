@@ -43,6 +43,7 @@ object DateUtil {
         "komentar" -> "Komentar"
         "ubah_status" -> "Status"
         "buat_skripsi" -> "Skripsi"
+        "hapus" -> "Hapus"
         else -> action
     }
 
