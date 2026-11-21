@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.widget.Toast
 import com.skripsitrack.app.SkripsiApp
 import com.skripsitrack.app.ui.auth.LoginActivity
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 
 fun Context.redirectToLogin(message: String? = null) {
     SkripsiApp.session.clear()
@@ -14,6 +15,16 @@ fun Context.redirectToLogin(message: String? = null) {
         Intent(this, LoginActivity::class.java)
             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     )
+}
+
+fun normalizeBaseUrl(input: String): String? {
+    var u = input.trim()
+    if (u.isEmpty()) return null
+    if (!u.startsWith("http://") && !u.startsWith("https://")) u = "http://$u"
+    u = u.trimEnd('/')
+    if (!u.endsWith("/api")) u += "/api"
+    u += "/"
+    return if (u.toHttpUrlOrNull() != null) u else null
 }
 
 /** Mengembalikan (label, warna teks, warna latar) */

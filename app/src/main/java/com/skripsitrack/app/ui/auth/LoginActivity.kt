@@ -15,6 +15,11 @@ import com.skripsitrack.app.ui.main.MainActivity
 import com.skripsitrack.app.util.Resource
 import com.skripsitrack.app.util.safeApiCall
 import kotlinx.coroutines.launch
+import androidx.appcompat.app.AlertDialog
+import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textfield.TextInputEditText
+import com.skripsitrack.app.R
+import com.skripsitrack.app.util.normalizeBaseUrl
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -25,6 +30,8 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnLogin.setOnClickListener { attemptLogin() }
+
+        binding.tvServer.setOnClickListener { showServerDialog() }
     }
 
     private fun attemptLogin() {
@@ -64,5 +71,36 @@ class LoginActivity : AppCompatActivity() {
     private fun setLoading(loading: Boolean) {
         binding.progress.visibility = if (loading) View.VISIBLE else View.GONE
         binding.btnLogin.isEnabled = !loading
+    }
+
+    private fun showServerDialog() {
+        val view = layoutInflater.inflate(R.layout.dialog_input, null)
+        val til = view.findViewById<TextInputLayout>(R.id.tilInput)
+        val et = view.findViewById<TextInputEditText>(R.id.etInput)
+        til.hint = "Alamat server, contoh: 192.168.1.110:8000"
+        et.setText(SkripsiApp.session.getBaseUrl())
+
+        val dialog = AlertDialog.Builder(this)
+            .setTitle("Atur server")
+            .setView(view)
+            .setPositiveButton("Simpan", null)
+            .setNeutralButton("Reset", null)
+            .setNegativeButton("Batal", null)
+            .create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val url = normalizeBaseUrl(et.text.toString())
+                if (url == null) { til.error = "Alamat tidak valid"; return@setOnClickListener }
+                SkripsiApp.session.setBaseUrl(url)
+                Toast.makeText(this, "Server: $url", Toast.LENGTH_LONG).show()
+                dialog.dismiss()
+            }
+            dialog.getButton(AlertDialog.BUTTON_NEUTRAL).setOnClickListener {
+                SkripsiApp.session.setBaseUrl(RetrofitClient.DEFAULT_BASE_URL)
+                et.setText(RetrofitClient.DEFAULT_BASE_URL)
+            }
+        }
+        dialog.show()
     }
 }

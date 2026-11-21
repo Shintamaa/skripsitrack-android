@@ -68,4 +68,10 @@ interface ApiService {
 
     @POST("submissions/bulk-delete")
     suspend fun bulkDeleteSubmissions(@Body body: BulkDeleteRequest): ApiResponse<BulkDeleteResult>
+
+    @GET("activities")
+    suspend fun activities(
+        @Query("page") page: Int,
+        @Query("action") action: String?
+    ): ApiResponse<Page<ActivityLog>>
 }

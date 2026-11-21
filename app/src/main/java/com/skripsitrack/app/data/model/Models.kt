@@ -133,4 +133,9 @@ data class BulkDeleteResult(
     val deleted: Int, val skipped: Int
 )
 
-
+data class Page<T>(
+    val current_page: Int,
+    val last_page: Int,
+    val total: Int,
+    val data: List<T>
+)

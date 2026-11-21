@@ -1,9 +1,11 @@
+
 package com.skripsitrack.app.util
 
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import retrofit2.HttpException
 import java.io.IOException
+import kotlinx.coroutines.CancellationException
 
 sealed class Resource<out T> {
     object Loading : Resource<Nothing>()
@@ -14,6 +16,8 @@ sealed class Resource<out T> {
 suspend fun <T> safeApiCall(call: suspend () -> T): Resource<T> {
     return try {
         Resource.Success(call())
+    } catch (e: CancellationException) {
+        throw e
     } catch (e: HttpException) {
         val body = e.response()?.errorBody()?.string()
         var msg = "Terjadi kesalahan (${e.code()})"

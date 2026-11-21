@@ -25,4 +25,10 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.VH>() {
     }
 
     override fun getItemCount() = items.size
+
+    fun append(list: List<ActivityLog>) {
+        val start = items.size
+        items = items + list
+        notifyItemRangeInserted(start, list.size)
+    }
 }

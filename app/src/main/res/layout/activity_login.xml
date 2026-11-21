@@ -69,5 +69,18 @@
             android:layout_gravity="center"
             android:layout_marginTop="16dp"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tvServer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Atur alamat server"
+            android:textColor="#1565C0" />
     </LinearLayout>
 </ScrollView>

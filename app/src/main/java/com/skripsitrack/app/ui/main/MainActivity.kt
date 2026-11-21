@@ -29,8 +29,7 @@ class MainActivity : AppCompatActivity() {
             val fragment: Fragment = when (item.itemId) {
                 R.id.nav_dashboard -> DashboardFragment()
                 R.id.nav_thesis -> ThesisListFragment()
-                R.id.nav_activity -> PlaceholderFragment.newInstance(
-                    "Riwayat Aktivitas", "Dibuat di Bagian 6")
+                R.id.nav_activity -> ActivityHistoryFragment()
                 else -> ProfileFragment()
             }
             supportFragmentManager.beginTransaction()
