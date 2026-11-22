@@ -139,3 +139,13 @@ data class Page<T>(
     val total: Int,
     val data: List<T>
 )
+
+data class RegisterRequest(
+    val name: String,
+    val email: String,
+    val nim_nidn: String,
+    val role: String,
+    val password: String,
+    val password_confirmation: String,
+    val invite_code: String? = null
+)

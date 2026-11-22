@@ -74,4 +74,7 @@ interface ApiService {
         @Query("page") page: Int,
         @Query("action") action: String?
     ): ApiResponse<Page<ActivityLog>>
+
+    @POST("register")
+    suspend fun register(@Body body: RegisterRequest): ApiResponse<LoginData>
 }
