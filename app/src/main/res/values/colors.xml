@@ -2,4 +2,33 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Palet SkripsiTrack (biru - krem) -->
+    <color name="st_bg">#F2F8FC</color>
+    <color name="st_ink">#0B2E42</color>
+    <color name="st_muted">#4A6A7C</color>
+    <color name="st_deep">#0A5F86</color>
+    <color name="st_deep_dark">#064A69</color>
+    <color name="st_mid">#4E8EBB</color>
+    <color name="st_sky">#98D6FF</color>
+    <color name="st_tint">#D6EEFF</color>
+    <color name="st_cream">#FFEDC4</color>
+    <color name="st_on_deep_muted">#CDEBFF</color>
+
+    <color name="st_border">#DCEBF4</color>
+    <color name="st_chip_border">#C9DDEA</color>
+    <color name="st_input_border">#B9D3E3</color>
+    <color name="st_input_bg">#F7FBFE</color>
+    <color name="st_divider">#E6F0F6</color>
+    <color name="st_track">#E3F0F8</color>
+    <color name="st_nav_inactive">#4F7184</color>
+
+    <!-- Status -->
+    <color name="st_gray_bg">#E4ECF3</color>
+    <color name="st_wait_text">#6B4A00</color>
+    <color name="st_rev_bg">#FBE1D4</color>
+    <color name="st_rev_text">#8A3A12</color>
+    <color name="st_danger">#B8431B</color>
+    <color name="st_green_bg">#DDF3E4</color>
+    <color name="st_green_text">#1F6B3A</color>
 </resources>

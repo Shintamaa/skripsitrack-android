@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.setPillColor
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.view.LayoutInflater
@@ -32,7 +33,7 @@ class StageAdapter(private val onClick: (ThesisStage) -> Unit) :
         b.tvName.text = s.name
         b.tvStatus.text = label
         b.tvStatus.setTextColor(textColor)
-        b.tvStatus.setBackgroundColor(bgColor)
+        b.tvStatus.setPillColor(bgColor)
 
         b.viewDot.backgroundTintList = ColorStateList.valueOf(textColor)
         b.viewLine.visibility = if (position == items.size - 1) View.INVISIBLE else View.VISIBLE
@@ -51,6 +52,9 @@ class StageAdapter(private val onClick: (ThesisStage) -> Unit) :
 
         val n = s.submissions_count ?: 0
         b.tvVersions.text = if (n == 0) "Belum ada unggahan" else "$n versi unggahan"
+        b.card.contentDescription =
+            "${s.name}. $label. Target ${DateUtil.formatDate(s.target_date)}. " +
+                (info ?: "Tidak ada informasi deadline tambahan.")
 
         b.card.setOnClickListener { onClick(s) }
     }

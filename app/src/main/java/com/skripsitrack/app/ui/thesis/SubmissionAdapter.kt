@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.setPillColor
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.Toast
@@ -30,6 +31,7 @@ class SubmissionAdapter(
     private val selected = mutableSetOf<Int>()
     var selectionMode = false
         private set
+    private var interactionEnabled = true
 
     fun submit(list: List<Submission>) {
         items = list
@@ -53,6 +55,11 @@ class SubmissionAdapter(
 
     fun selectedIds(): List<Int> = selected.toList()
 
+    fun setInteractionEnabled(enabled: Boolean) {
+        interactionEnabled = enabled
+        notifyDataSetChanged()
+    }
+
     inner class VH(val b: ItemSubmissionBinding) : RecyclerView.ViewHolder(b.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -70,7 +77,7 @@ class SubmissionAdapter(
         val (label, textColor, bgColor) = submissionStatusStyle(s.status)
         b.tvStatus.text = label
         b.tvStatus.setTextColor(textColor)
-        b.tvStatus.setBackgroundColor(bgColor)
+        b.tvStatus.setPillColor(bgColor)
         b.tvDate.text = DateUtil.formatDateTime(s.created_at)
 
         // Pratinjau berkas
@@ -82,6 +89,9 @@ class SubmissionAdapter(
 
         b.tvNote.isVisible = !s.note.isNullOrBlank()
         b.tvNote.text = s.note
+        b.card.contentDescription =
+            "Versi ${s.version}. Status $label. ${DateUtil.formatDateTime(s.created_at)}. " +
+                (s.note?.takeIf { it.isNotBlank() } ?: "Tidak ada catatan.")
 
         // Komentar (urut dari yang terlama)
         b.llComments.removeAllViews()
@@ -99,9 +109,13 @@ class SubmissionAdapter(
         val reviewable = isDosen && s.id == latestId && !approved
         val deletable = !isDosen && !approved
         b.btnComment.isVisible = !selectionMode
+        b.btnComment.isEnabled = interactionEnabled
         b.btnApprove.isVisible = !selectionMode && reviewable
+        b.btnApprove.isEnabled = interactionEnabled
         b.btnRevise.isVisible = !selectionMode && reviewable && s.status == "menunggu"
+        b.btnRevise.isEnabled = interactionEnabled
         b.btnDelete.isVisible = !selectionMode && deletable
+        b.btnDelete.isEnabled = interactionEnabled
         b.layoutActions.isVisible = !selectionMode
 
         b.btnComment.setOnClickListener { cb.onComment(s) }
@@ -114,6 +128,7 @@ class SubmissionAdapter(
         b.cbSelect.isChecked = selected.contains(s.id)
 
         b.card.setOnClickListener {
+            if (!interactionEnabled) return@setOnClickListener
             if (!selectionMode) {
                 cb.onOpen(s)
             } else if (approved) {
@@ -121,7 +136,10 @@ class SubmissionAdapter(
                     Toast.LENGTH_SHORT).show()
             } else {
                 if (!selected.add(s.id)) selected.remove(s.id)
-                notifyItemChanged(h.bindingAdapterPosition)
+                val adapterPosition = h.bindingAdapterPosition
+                if (adapterPosition != RecyclerView.NO_POSITION) {
+                    notifyItemChanged(adapterPosition)
+                }
                 cb.onSelectionChanged(selected.size)
             }
         }

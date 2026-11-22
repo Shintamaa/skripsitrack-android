@@ -6,6 +6,9 @@ import android.os.Handler
 import android.os.Looper
 import android.view.animation.OvershootInterpolator
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.WindowCompat
+import com.skripsitrack.app.R
 import com.skripsitrack.app.databinding.ActivitySplashOneBinding
 
 class SplashOneActivity : AppCompatActivity() {
@@ -15,6 +18,10 @@ class SplashOneActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashOneBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        window.statusBarColor = ContextCompat.getColor(this, R.color.st_deep)
+        WindowCompat.getInsetsController(window, window.decorView)
+            .isAppearanceLightStatusBars = false
 
         binding.ivLogo.scaleX = 0.3f
         binding.ivLogo.scaleY = 0.3f
