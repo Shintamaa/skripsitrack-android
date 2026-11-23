@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tvDayHeader"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="18dp"
+    android:layout_marginBottom="8dp"
+    android:fontFamily="sans-serif-medium"
+    android:gravity="center_vertical"
+    android:minHeight="28dp"
+    android:textColor="@color/st_deep"
+    android:textSize="13sp"
+    android:textStyle="bold" />

@@ -3,127 +3,199 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/st_bg"
     android:orientation="vertical">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="?attr/homeAsUpIndicator" />
+        android:background="@color/white"
+        app:navigationIcon="?attr/homeAsUpIndicator"
+        app:navigationIconTint="@color/st_deep"
+        app:titleTextColor="@color/st_ink"
+        app:elevation="0dp" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingStart="18dp"
+            android:paddingTop="18dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="28dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilTitle"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Judul skripsi">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etTitle"
+                android:text="Lengkapi informasi skripsi"
+                android:textColor="@color/st_ink"
+                android:textSize="21sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Isi data berikut agar proses bimbingan dapat dipantau."
+                android:textColor="@color/st_muted"
+                android:textSize="13sp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/st_border"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textCapSentences|textMultiLine" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:orientation="vertical"
+                    android:padding="18dp">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilDesc"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Deskripsi (opsional)">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etDesc"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="top"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:minLines="3" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilTitle"
+                        style="@style/Widget.SkripsiTrack.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Judul skripsi"
+                        app:helperText="Gunakan judul sesuai pengajuan penelitian.">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilSupervisor"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Dosen pembimbing">
-                <AutoCompleteTextView
-                    android:id="@+id/actSupervisor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:imeOptions="actionNext"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:minLines="2" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilStart"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Tanggal mulai">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etStart"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDesc"
+                        style="@style/Widget.SkripsiTrack.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="Deskripsi (opsional)"
+                        app:helperText="Tambahkan ringkasan singkat jika diperlukan.">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilTarget"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Target selesai">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etTarget"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDesc"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="top"
+                            android:inputType="textCapSentences|textMultiLine"
+                            android:minLines="3" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilStatus"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:hint="Status"
-                android:visibility="gone">
-                <AutoCompleteTextView
-                    android:id="@+id/actStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="none" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilSupervisor"
+                        style="@style/Widget.SkripsiTrack.TextInput.Dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="Dosen pembimbing">
 
-            <Button
-                android:id="@+id/btnSave"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="24dp"
-                android:text="Simpan" />
+                        <AutoCompleteTextView
+                            android:id="@+id/actSupervisor"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:minHeight="56dp"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
-            <ProgressBar
-                android:id="@+id/progress"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="12dp"
-                android:visibility="gone" />
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilStart"
+                        style="@style/Widget.SkripsiTrack.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="Tanggal mulai"
+                        app:endIconDrawable="@drawable/ic_calendar"
+                        app:endIconMode="custom"
+                        app:endIconTint="@color/st_deep">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:minHeight="56dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilTarget"
+                        style="@style/Widget.SkripsiTrack.TextInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="Target selesai"
+                        app:endIconDrawable="@drawable/ic_calendar"
+                        app:endIconMode="custom"
+                        app:endIconTint="@color/st_deep">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etTarget"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:minHeight="56dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilStatus"
+                        style="@style/Widget.SkripsiTrack.TextInput.Dropdown"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:hint="Status"
+                        android:visibility="gone">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/actStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="none"
+                            android:minHeight="56dp"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSave"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="22dp"
+                        android:text="Simpan"
+                        app:cornerRadius="16dp" />
+
+                    <ProgressBar
+                        android:id="@+id/progress"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="12dp"
+                        android:indeterminateTint="@color/st_deep"
+                        android:visibility="gone" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>

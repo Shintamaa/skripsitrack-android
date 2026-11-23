@@ -3,7 +3,9 @@ package com.skripsitrack.app.ui.thesis
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
@@ -25,6 +27,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class ThesisListFragment : Fragment() {
+
     private var _b: FragmentThesisListBinding? = null
     private val b get() = _b!!
 
@@ -32,150 +35,198 @@ class ThesisListFragment : Fragment() {
     private lateinit var adapter: ThesisAdapter
 
     private var searchJob: Job? = null
+    private var requestJob: Job? = null
+    private var requestId = 0
     private var query = ""
     private var status: String? = null
 
     private val formLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
-            if (res.resultCode == Activity.RESULT_OK) load(full = true)
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) load(full = true)
         }
 
-    override fun onCreateView(inflater: LayoutInflater, c: ViewGroup?, s: Bundle?): View {
-        _b = FragmentThesisListBinding.inflate(inflater, c, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        _b = FragmentThesisListBinding.inflate(inflater, container, false)
         return b.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         adapter = ThesisAdapter(
-            isDosen,
-            onClick = {
+            isDosen = isDosen,
+            onClick = { thesis ->
                 formLauncher.launch(
                     Intent(requireContext(), ThesisDetailActivity::class.java)
-                        .putExtra("thesis_id", it.id)
+                        .putExtra("thesis_id", thesis.id)
                 )
             },
-            onEdit = { openForm(it) },
-            onDelete = { confirmDelete(it) }
+            onEdit = { thesis -> openForm(thesis) },
+            onDelete = { thesis -> confirmDelete(thesis) }
         )
+
         b.rv.layoutManager = LinearLayoutManager(requireContext())
         b.rv.adapter = adapter
 
-        // Hanya mahasiswa yang boleh menambah skripsi
         b.fabAdd.isVisible = !isDosen
         b.fabAdd.setOnClickListener { openForm(null) }
 
         b.swipe.setOnRefreshListener { load(full = false) }
         b.btnRetry.setOnClickListener { load(full = true) }
 
-        // Pencarian dengan jeda 450 ms agar tidak memanggil API di setiap ketikan
-        b.etSearch.doAfterTextChanged { text ->
+        b.etSearch.doAfterTextChanged { editable ->
+            query = editable?.toString()?.trim().orEmpty()
+
+            // Respons pencarian lama tidak boleh muncul ketika pengguna masih mengetik.
+            requestId++
+            requestJob?.cancel()
             searchJob?.cancel()
             searchJob = viewLifecycleOwner.lifecycleScope.launch {
-                delay(450)
-                query = text.toString().trim()
+                delay(400)
                 load(full = false)
             }
         }
 
-        b.chipGroup.setOnCheckedStateChangeListener { _, ids ->
-            status = when (ids.firstOrNull()) {
+        b.chipGroup.setOnCheckedStateChangeListener { _, checkedIds ->
+            searchJob?.cancel()
+            searchJob = null
+            status = when (checkedIds.firstOrNull()) {
                 b.chipBerjalan.id -> "berjalan"
                 b.chipSelesai.id -> "selesai"
                 b.chipDitunda.id -> "ditunda"
                 else -> null
             }
-            load(full = false)
+            load(full = true)
         }
 
         load(full = true)
     }
 
-    private fun openForm(t: Thesis?) {
-        val i = Intent(requireContext(), ThesisFormActivity::class.java)
-        t?.let { i.putExtra("thesis", Gson().toJson(it)) }
-        formLauncher.launch(i)
+    private fun openForm(thesis: Thesis?) {
+        val intent = Intent(requireContext(), ThesisFormActivity::class.java)
+        thesis?.let { intent.putExtra("thesis", Gson().toJson(it)) }
+        formLauncher.launch(intent)
     }
 
     private fun load(full: Boolean) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            b.layoutError.isVisible = false
-            if (full) {
-                b.progressLoading.isVisible = true
-                b.tvEmpty.isVisible = false
-                b.swipe.isVisible = false
-            } else {
-                b.swipe.isRefreshing = true
-            }
+        val currentBinding = _b ?: return
 
+        requestJob?.cancel()
+        val id = ++requestId
+        val search = query
+        val selectedStatus = status
+
+        currentBinding.layoutError.isVisible = false
+        currentBinding.tvEmpty.isVisible = false
+
+        if (full) {
+            currentBinding.progressLoading.isVisible = true
+            currentBinding.swipe.isVisible = false
+            currentBinding.swipe.isRefreshing = false
+        } else {
+            currentBinding.swipe.isVisible = true
+            currentBinding.swipe.isRefreshing = true
+        }
+
+        requestJob = viewLifecycleOwner.lifecycleScope.launch {
             val result = safeApiCall {
-                RetrofitClient.api.theses(query.ifEmpty { null }, status)
+                RetrofitClient.api.theses(search.ifEmpty { null }, selectedStatus)
             }
 
-            b.progressLoading.isVisible = false
-            b.swipe.isRefreshing = false
-            b.swipe.isVisible = true
+            if (id != requestId || _b == null) return@launch
+
+            val binding = _b ?: return@launch
+            binding.progressLoading.isVisible = false
+            binding.swipe.isRefreshing = false
+            binding.swipe.isVisible = true
 
             when (result) {
                 is Resource.Success -> showList(result.data.data.orEmpty())
                 is Resource.Error -> handleError(result, showFullError = full)
-                else -> {}
+                else -> Unit
             }
         }
     }
 
     private fun showList(list: List<Thesis>) {
+        val binding = _b ?: return
         adapter.submit(list)
-        b.tvEmpty.isVisible = list.isEmpty()
+        binding.layoutError.isVisible = false
+        binding.tvEmpty.isVisible = list.isEmpty()
+
         if (list.isEmpty()) {
             val filtering = query.isNotEmpty() || status != null
-            b.tvEmpty.text = when {
-                filtering -> "Tidak ada hasil untuk pencarian atau filter ini."
-                isDosen -> "Belum ada mahasiswa bimbingan."
-                else -> "Belum ada skripsi.\nKetuk tombol + untuk menambahkan."
+            binding.tvEmpty.text = when {
+                filtering -> "Tidak ada hasil. Coba ubah kata kunci atau filter."
+                isDosen -> "Belum ada mahasiswa bimbingan yang terdaftar."
+                else -> "Belum ada skripsi. Ketuk tombol + untuk menambahkan judul."
             }
         }
     }
 
-    private fun handleError(e: Resource.Error, showFullError: Boolean) {
-        if (e.code == 401) {
+    private fun handleError(error: Resource.Error, showFullError: Boolean) {
+        if (error.code == 401) {
             requireContext().redirectToLogin("Sesi berakhir, silakan login kembali")
             return
         }
-        if (showFullError) {
-            b.swipe.isVisible = false
-            b.layoutError.isVisible = true
-            b.tvError.text = e.message
+
+        val binding = _b ?: return
+        if (showFullError || adapter.itemCount == 0) {
+            binding.swipe.isVisible = false
+            binding.layoutError.isVisible = true
+            binding.tvError.text = error.message
         } else {
-            Toast.makeText(requireContext(), e.message, Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), error.message, Toast.LENGTH_LONG).show()
         }
     }
 
-    private fun confirmDelete(t: Thesis) {
+    private fun confirmDelete(thesis: Thesis) {
         AlertDialog.Builder(requireContext())
             .setTitle("Hapus skripsi?")
-            .setMessage("\"${t.title}\"\n\nSeluruh tahapan, unggahan, dan komentar ikut terhapus. Tindakan ini tidak dapat dibatalkan.")
-            .setPositiveButton("Hapus") { _, _ -> delete(t) }
+            .setMessage(
+                "\"${thesis.title}\"\n\nSeluruh tahapan, unggahan, dan komentar ikut terhapus. Tindakan ini tidak dapat dibatalkan."
+            )
+            .setPositiveButton("Hapus") { _, _ -> delete(thesis) }
             .setNegativeButton("Batal", null)
             .show()
     }
 
-    private fun delete(t: Thesis) {
+    private fun delete(thesis: Thesis) {
         viewLifecycleOwner.lifecycleScope.launch {
-            b.swipe.isRefreshing = true
-            val r = safeApiCall { RetrofitClient.api.deleteThesis(t.id) }
-            when (r) {
+            _b?.swipe?.isRefreshing = true
+            val result = safeApiCall { RetrofitClient.api.deleteThesis(thesis.id) }
+
+            when (result) {
                 is Resource.Success -> {
-                    Toast.makeText(requireContext(), "Skripsi dihapus", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        "Skripsi berhasil dihapus.",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     load(full = false)
                 }
+
                 is Resource.Error -> {
-                    b.swipe.isRefreshing = false
-                    handleError(r, showFullError = false)
+                    _b?.swipe?.isRefreshing = false
+                    handleError(result, showFullError = false)
                 }
-                else -> {}
+
+                else -> Unit
             }
         }
     }
 
-    override fun onDestroyView() { super.onDestroyView(); _b = null }
+    override fun onDestroyView() {
+        requestId++
+        searchJob?.cancel()
+        requestJob?.cancel()
+        searchJob = null
+        requestJob = null
+        _b = null
+        super.onDestroyView()
+    }
 }

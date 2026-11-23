@@ -17,22 +17,62 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:paddingHorizontal="20dp"
+                android:paddingTop="24dp"
+                android:paddingBottom="20dp">
 
-                <TextView
-                    android:id="@+id/tvGreeting"
-                    android:layout_width="wrap_content"
+                <!-- Sapaan + avatar -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="22sp"
-                    android:textStyle="bold" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Selamat datang,"
+                            android:textColor="@color/st_muted"
+                            android:textSize="13sp" />
+                        <TextView
+                            android:id="@+id/tvGreeting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:ellipsize="end"
+                            android:fontFamily="sans-serif-medium"
+                            android:maxLines="1"
+                            android:textColor="@color/st_ink"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvAvatar"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="12dp"
+                        android:background="@drawable/bg_avatar"
+                        android:fontFamily="sans-serif-medium"
+                        android:gravity="center"
+                        android:textColor="@color/st_cream"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tvEmptyThesis"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:background="#FFF8E1"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/bg_card_cream"
                     android:padding="16dp"
+                    android:textColor="@color/st_wait_text"
                     android:visibility="gone" />
 
                 <!-- Kartu progres -->
@@ -40,30 +80,37 @@
                     android:id="@+id/cardProgress"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp">
+                    android:layout_marginTop="20dp"
+                    app:cardBackgroundColor="@color/st_deep"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:padding="16dp">
+                        android:padding="20dp">
 
                         <FrameLayout
-                            android:layout_width="110dp"
-                            android:layout_height="110dp">
+                            android:layout_width="92dp"
+                            android:layout_height="92dp">
                             <com.google.android.material.progressindicator.CircularProgressIndicator
                                 android:id="@+id/cpiProgress"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:max="100"
-                                app:indicatorSize="100dp"
-                                app:trackThickness="10dp" />
+                                app:indicatorColor="@color/st_cream"
+                                app:indicatorSize="84dp"
+                                app:trackColor="@color/st_mid"
+                                app:trackCornerRadius="5dp"
+                                app:trackThickness="9dp" />
                             <TextView
                                 android:id="@+id/tvPercent"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="@color/white"
                                 android:textSize="22sp"
                                 android:textStyle="bold" />
                         </FrameLayout>
@@ -78,13 +125,21 @@
                                 android:id="@+id/tvProgressLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:textColor="@color/white"
+                                android:textSize="16sp"
                                 android:textStyle="bold" />
                             <TextView
                                 android:id="@+id/tvStageCount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:textColor="#616161" />
+                                android:layout_marginTop="8dp"
+                                android:background="@drawable/bg_pill"
+                                android:backgroundTint="@color/st_cream"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"
+                                android:textColor="#0B3A52"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -100,22 +155,42 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="6dp"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        app:cardCornerRadius="20dp">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="16dp">
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/st_cream">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_history"
+                                    android:tint="#7A4B00" />
+                            </FrameLayout>
                             <TextView
                                 android:id="@+id/tvWaiting"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="@color/st_ink"
                                 android:textSize="28sp"
                                 android:textStyle="bold" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Menunggu review" />
+                                android:layout_marginTop="2dp"
+                                android:text="Menunggu review"
+                                android:textColor="@color/st_muted"
+                                android:textSize="13sp" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
@@ -123,22 +198,42 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="6dp"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        app:cardCornerRadius="20dp">
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:padding="16dp">
+                            <FrameLayout
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/bg_icon_tile"
+                                android:backgroundTint="@color/st_rev_bg">
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:layout_gravity="center"
+                                    android:importantForAccessibility="no"
+                                    android:src="@drawable/ic_edit"
+                                    android:tint="@color/st_rev_text" />
+                            </FrameLayout>
                             <TextView
                                 android:id="@+id/tvRevision"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:fontFamily="sans-serif-medium"
+                                android:textColor="@color/st_ink"
                                 android:textSize="28sp"
                                 android:textStyle="bold" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Perlu revisi" />
+                                android:layout_marginTop="2dp"
+                                android:text="Perlu revisi"
+                                android:textColor="@color/st_muted"
+                                android:textSize="13sp" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
                 </LinearLayout>
@@ -148,29 +243,58 @@
                     android:id="@+id/cardDeadline"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp">
+                    android:layout_marginTop="12dp"
+                    app:cardBackgroundColor="@color/st_cream"
+                    app:cardCornerRadius="20dp"
+                    app:strokeWidth="0dp">
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
                         android:padding="16dp">
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_icon_tile"
+                            android:backgroundTint="@color/white">
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_calendar"
+                                android:tint="@color/st_deep" />
+                        </FrameLayout>
+                        <LinearLayout
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:text="Deadline terdekat"
-                            android:textColor="#616161" />
-                        <TextView
-                            android:id="@+id/tvDeadlineStage"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="4dp"
-                            android:textSize="16sp"
-                            android:textStyle="bold" />
-                        <TextView
-                            android:id="@+id/tvDeadlineDate"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp" />
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Deadline terdekat"
+                                android:textColor="@color/st_wait_text"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvDeadlineStage"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textColor="#2F2100"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:id="@+id/tvDeadlineDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:textColor="@color/st_wait_text"
+                                android:textSize="13sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
@@ -178,9 +302,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="sans-serif-medium"
                     android:text="Aktivitas terbaru"
-                    android:textSize="16sp"
+                    android:textColor="@color/st_ink"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -195,17 +322,35 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Belum ada aktivitas."
-                    android:textColor="#757575"
+                    android:textColor="@color/st_muted"
                     android:visibility="gone" />
             </LinearLayout>
         </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <ProgressBar
-        android:id="@+id/progressLoading"
+    <LinearLayout
+        android:id="@+id/layoutLoading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <ProgressBar
+            android:id="@+id/progressLoading"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:indeterminateTint="@color/st_deep" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Memuat dashboard..."
+            android:textColor="@color/st_muted"
+            android:textSize="13sp" />
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/layoutError"
@@ -220,8 +365,9 @@
             android:id="@+id/tvError"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center" />
-        <Button
+            android:gravity="center"
+            android:textColor="@color/st_muted" />
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnRetry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

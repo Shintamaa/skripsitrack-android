@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.setPillColor
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.PopupMenu
@@ -39,14 +40,16 @@ class ThesisAdapter(
         val (label, textColor, bgColor) = thesisStatusStyle(t.status)
         b.tvStatus.text = label
         b.tvStatus.setTextColor(textColor)
-        b.tvStatus.setBackgroundColor(bgColor)
+        b.tvStatus.setPillColor(bgColor)
 
         val total = t.stages_count ?: 0
         val done = t.done_stages_count ?: 0
         val percent = if (total > 0) done * 100 / total else 0
-        b.lpi.setProgressCompat(percent, false)
+        b.lpi.setProgressCompat(percent.coerceIn(0, 100), false)
         b.tvProgress.text = "$done/$total tahapan selesai ($percent%)"
         b.tvTarget.text = "Target: ${DateUtil.formatDate(t.target_date)}"
+        b.root.contentDescription =
+            "${t.title}. $label. $done dari $total tahapan selesai. Target ${DateUtil.formatDate(t.target_date)}."
 
         b.root.setOnClickListener { onClick(t) }
 

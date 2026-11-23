@@ -1,5 +1,7 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.applyStatusBarInset
+import com.skripsitrack.app.util.setPillColor
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
@@ -40,6 +42,7 @@ class ThesisDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityThesisDetailBinding.inflate(layoutInflater)
         setContentView(b.root)
+        b.toolbar.applyStatusBarInset()
 
         thesisId = intent.getIntExtra("thesis_id", 0)
         b.toolbar.setNavigationOnClickListener { finish() }
@@ -95,7 +98,7 @@ class ThesisDetailActivity : AppCompatActivity() {
         val (label, textColor, bgColor) = thesisStatusStyle(t.status)
         b.tvStatus.text = label
         b.tvStatus.setTextColor(textColor)
-        b.tvStatus.setBackgroundColor(bgColor)
+        b.tvStatus.setPillColor(bgColor)
 
         b.tvPeople.text = "Mahasiswa: ${t.student?.name ?: "-"} (${t.student?.nim_nidn ?: "-"})\n" +
                 "Pembimbing: ${t.supervisor?.name ?: "-"}"

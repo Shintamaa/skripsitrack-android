@@ -1,5 +1,7 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.applyStatusBarInset
+import com.skripsitrack.app.util.setPillColor
 import android.app.Activity
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -23,6 +25,7 @@ import com.skripsitrack.app.data.model.*
 import com.skripsitrack.app.data.remote.RetrofitClient
 import com.skripsitrack.app.databinding.ActivityStageBinding
 import com.skripsitrack.app.util.*
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -37,6 +40,8 @@ class StageActivity : AppCompatActivity(), SubmissionAdapter.Callbacks {
     private var stageId = 0
     private var picked: PickedFile? = null
     private var canSelectAny = false
+    private var actionInProgress = false
+    private var uploadInProgress = false
     private val isMahasiswa get() = SkripsiApp.session.getRole() == "mahasiswa"
 
     private val pickFile =
@@ -53,6 +58,7 @@ class StageActivity : AppCompatActivity(), SubmissionAdapter.Callbacks {
         super.onCreate(savedInstanceState)
         b = ActivityStageBinding.inflate(layoutInflater)
         setContentView(b.root)
+        b.toolbar.applyStatusBarInset()
 
         stageId = intent.getIntExtra("stage_id", 0)
         b.toolbar.title = intent.getStringExtra("stage_name") ?: "Tahapan"
@@ -122,7 +128,7 @@ class StageActivity : AppCompatActivity(), SubmissionAdapter.Callbacks {
         val (label, textColor, bgColor) = stageStatusStyle(s.status)
         b.tvStatus.text = label
         b.tvStatus.setTextColor(textColor)
-        b.tvStatus.setBackgroundColor(bgColor)
+        b.tvStatus.setPillColor(bgColor)
 
         val info = DateUtil.deadlineInfo(s.status, s.target_date)
         b.tvTarget.text = "Target: ${DateUtil.formatDate(s.target_date)}" +
@@ -202,26 +208,56 @@ class StageActivity : AppCompatActivity(), SubmissionAdapter.Callbacks {
             .show()
     }
 
-    /** Jalankan satu aksi ke API, tampilkan hasilnya, lalu muat ulang. */
+    /** Jalankan satu aksi ke API, cegah pengiriman berulang, lalu muat ulang data. */
     private fun <T> runAction(successMsg: String?, call: suspend () -> ApiResponse<T>) {
+        if (actionInProgress || uploadInProgress) return
+
+        actionInProgress = true
+        setActionBusy(true)
+
         lifecycleScope.launch {
-            b.swipe.isRefreshing = true
-            val r = safeApiCall { call() }
-            when (r) {
-                is Resource.Success -> {
-                    toast(successMsg ?: r.data.message ?: "Berhasil")
-                    setResult(Activity.RESULT_OK)
-                    adapter.setSelectionMode(false)
-                    load(full = false)
+            var shouldReload = false
+            try {
+                b.swipe.isRefreshing = true
+                val result = safeApiCall { call() }
+
+                when (result) {
+                    is Resource.Success -> {
+                        toast(successMsg ?: result.data.message ?: "Berhasil")
+                        setResult(Activity.RESULT_OK)
+                        adapter.setSelectionMode(false)
+                        shouldReload = true
+                    }
+
+                    is Resource.Error -> {
+                        if (result.code == 401) {
+                            redirectToLogin("Sesi berakhir, silakan login kembali")
+                        } else {
+                            toast(result.message)
+                        }
+                    }
+
+                    else -> Unit
                 }
-                is Resource.Error -> {
-                    b.swipe.isRefreshing = false
-                    if (r.code == 401) redirectToLogin("Sesi berakhir, silakan login kembali")
-                    else toast(r.message)
-                }
-                else -> {}
+            } finally {
+                actionInProgress = false
+                b.swipe.isRefreshing = false
+                setActionBusy(false)
             }
+
+            if (shouldReload && !isFinishing) load(full = false)
         }
+    }
+
+    private fun setActionBusy(busy: Boolean) {
+        b.swipe.isEnabled = !busy && !uploadInProgress
+        b.btnPick.isEnabled = !busy && !uploadInProgress
+        b.btnUpload.isEnabled = !busy && !uploadInProgress && picked != null
+        b.tvSelect.isEnabled = !busy
+        b.tvSelectAll.isEnabled = !busy
+        b.tvCancelSelect.isEnabled = !busy
+        b.btnDeleteSelected.isEnabled = !busy && adapter.selectedIds().isNotEmpty()
+        adapter.setInteractionEnabled(!busy && !uploadInProgress)
     }
 
     private fun showInputDialog(
@@ -268,10 +304,12 @@ class StageActivity : AppCompatActivity(), SubmissionAdapter.Callbacks {
         val f = queryFile(uri)
 
         if (f.mime !in ALLOWED_MIMES) {
+            clearPickedFile()
             toast("Format tidak didukung. Gunakan JPG, PNG, PDF, atau DOC/DOCX.")
             return
         }
         if (f.size > MAX_UPLOAD_BYTES) {
+            clearPickedFile()
             toast("Ukuran berkas ${formatSize(f.size)}. Maksimal 5 MB.")
             return
         }
@@ -290,55 +328,93 @@ class StageActivity : AppCompatActivity(), SubmissionAdapter.Callbacks {
     }
 
     private fun upload() {
-        val f = picked ?: return
-        val note = b.etNote.text.toString().trim()
+        val selectedFile = picked ?: return
+        if (uploadInProgress || actionInProgress) return
+
+        val note = b.etNote.text?.toString()?.trim().orEmpty()
+        uploadInProgress = true
 
         lifecycleScope.launch {
+            var temporaryFile: java.io.File? = null
             setUploading(true)
 
-            val file = withContext(Dispatchers.IO) { copyToCache(f) }
             try {
+                val fileForUpload = withContext(Dispatchers.IO) {
+                    copyToCache(selectedFile)
+                }
+                temporaryFile = fileForUpload
+
                 val part = MultipartBody.Part.createFormData(
-                    "file", file.name, file.asRequestBody(f.mime.toMediaTypeOrNull())
+                    "file",
+                    fileForUpload.name,
+                    fileForUpload.asRequestBody(selectedFile.mime.toMediaTypeOrNull())
                 )
                 val noteBody = note.takeIf { it.isNotEmpty() }
                     ?.toRequestBody("text/plain".toMediaTypeOrNull())
 
-                val r = safeApiCall { RetrofitClient.api.uploadSubmission(stageId, part, noteBody) }
+                val result = safeApiCall {
+                    RetrofitClient.api.uploadSubmission(stageId, part, noteBody)
+                }
 
-                when (r) {
+                when (result) {
                     is Resource.Success -> {
-                        val v = r.data.data?.version
-                        toast(if (v != null) "Berkas diunggah sebagai versi $v" else "Berkas diunggah")
+                        val version = result.data.data?.version
+                        toast(
+                            if (version != null) {
+                                "Berkas berhasil diunggah sebagai versi $version."
+                            } else {
+                                "Berkas berhasil diunggah."
+                            }
+                        )
                         resetPicker()
                         setResult(Activity.RESULT_OK)
                         load(full = false)
                     }
+
                     is Resource.Error -> {
-                        if (r.code == 401) redirectToLogin("Sesi berakhir, silakan login kembali")
-                        else toast(r.message)
+                        if (result.code == 401) {
+                            redirectToLogin("Sesi berakhir, silakan login kembali")
+                        } else {
+                            toast(result.message)
+                        }
                     }
-                    else -> {}
+
+                    else -> Unit
                 }
+            } catch (cancelled: CancellationException) {
+                throw cancelled
+            } catch (error: Exception) {
+                toast(error.message ?: "Berkas gagal disiapkan. Silakan coba lagi.")
             } finally {
-                file.delete()
+                temporaryFile?.delete()
+                uploadInProgress = false
                 setUploading(false)
             }
         }
     }
 
-    private fun resetPicker() {
+    private fun clearPickedFile() {
         picked = null
         b.tvFileName.isVisible = false
         b.ivPickPreview.isVisible = false
-        b.etNote.setText("")
         b.btnUpload.isEnabled = false
+    }
+
+    private fun resetPicker() {
+        clearPickedFile()
+        b.etNote.setText("")
     }
 
     private fun setUploading(uploading: Boolean) {
         b.progressUpload.visibility = if (uploading) View.VISIBLE else View.GONE
-        b.btnPick.isEnabled = !uploading
-        b.btnUpload.isEnabled = !uploading && picked != null
+        b.swipe.isEnabled = !uploading && !actionInProgress
+        b.btnPick.isEnabled = !uploading && !actionInProgress
+        b.btnUpload.isEnabled = !uploading && !actionInProgress && picked != null
+        b.etNote.isEnabled = !uploading
+        b.tvSelect.isEnabled = !uploading && !actionInProgress
+        b.tvSelectAll.isEnabled = !uploading && !actionInProgress
+        b.tvCancelSelect.isEnabled = !uploading && !actionInProgress
+        adapter.setInteractionEnabled(!uploading && !actionInProgress)
     }
 
     private fun openFile(s: Submission) {

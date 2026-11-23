@@ -1,7 +1,35 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.SkripsiTrack" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <!-- Tema aplikasi: terang saja (sesuai desain biru - krem) -->
+    <style name="Base.Theme.SkripsiTrack" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/st_deep</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorPrimaryContainer">@color/st_tint</item>
+        <item name="colorOnPrimaryContainer">@color/st_deep_dark</item>
+        <item name="colorSecondary">@color/st_mid</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="colorSecondaryContainer">@color/st_tint</item>
+        <item name="colorOnSecondaryContainer">@color/st_deep_dark</item>
+        <item name="colorTertiaryContainer">@color/st_cream</item>
+        <item name="colorOnTertiaryContainer">@color/st_wait_text</item>
+        <item name="android:colorBackground">@color/st_bg</item>
+        <item name="colorSurface">@color/white</item>
+        <item name="colorOnSurface">@color/st_ink</item>
+        <item name="colorOnSurfaceVariant">@color/st_muted</item>
+        <item name="colorOutline">@color/st_input_border</item>
+        <item name="colorOutlineVariant">@color/st_border</item>
+        <item name="colorError">@color/st_danger</item>
+        <!-- Hilangkan semburat biru pada kartu/komponen yang punya bayangan -->
+
+        <item name="android:statusBarColor">@color/st_bg</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/white</item>
+        <item name="android:windowLightNavigationBar" tools:targetApi="27">true</item>
+
+        <item name="materialCardViewStyle">@style/Widget.SkripsiTrack.Card</item>
+        <item name="materialButtonStyle">@style/Widget.SkripsiTrack.Button</item>
+        <item name="linearProgressIndicatorStyle">@style/Widget.SkripsiTrack.LinearProgress</item>
+        <item name="bottomNavigationStyle">@style/Widget.SkripsiTrack.BottomNav</item>
     </style>
+
+    <style name="Theme.SkripsiTrack" parent="Base.Theme.SkripsiTrack" />
 </resources>

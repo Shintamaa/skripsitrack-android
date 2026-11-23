@@ -3,14 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/st_bg">
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:title="Detail Skripsi"
+        app:titleTextColor="@color/st_deep"
         app:navigationIcon="?attr/homeAsUpIndicator"
-        app:title="Detail Skripsi" />
+        app:navigationIconTint="@color/st_deep"
+        app:elevation="0dp" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -24,99 +29,227 @@
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:fillViewport="true">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="16dp"
+                    android:paddingBottom="28dp">
 
+                    <!-- Informasi skripsi -->
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="#DCE5EF"
+                        app:strokeWidth="1dp">
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:padding="16dp">
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="INFORMASI SKRIPSI"
+                                android:textColor="#315F91"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.08" />
 
                             <TextView
                                 android:id="@+id/tvTitle"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:textSize="18sp"
-                                android:textStyle="bold" />
+                                android:layout_marginTop="12dp"
+                                android:textColor="@color/st_deep"
+                                android:textSize="21sp"
+                                android:textStyle="bold"
+                                android:lineSpacingExtra="3dp" />
 
                             <TextView
                                 android:id="@+id/tvStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
-                                android:paddingHorizontal="10dp"
-                                android:paddingVertical="3dp"
+                                android:layout_marginTop="12dp"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="6dp"
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginTop="18dp"
+                                android:background="#EDF1F6" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:text="INFORMASI PENGGUNA"
+                                android:textColor="@color/st_muted"
+                                android:textSize="11sp"
+                                android:textStyle="bold"
+                                android:letterSpacing="0.06" />
 
                             <TextView
                                 android:id="@+id/tvPeople"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="12dp"
-                                android:lineSpacingExtra="2dp" />
+                                android:layout_marginTop="9dp"
+                                android:textColor="#4C5F79"
+                                android:textSize="14sp"
+                                android:lineSpacingExtra="5dp" />
 
                             <TextView
                                 android:id="@+id/tvDates"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:textColor="#616161" />
+                                android:layout_marginTop="12dp"
+                                android:padding="12dp"
+                                android:background="@color/st_bg"
+                                android:textColor="@color/st_muted"
+                                android:textSize="13sp" />
 
                             <TextView
                                 android:id="@+id/tvDesc"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="8dp"
+                                android:layout_marginTop="12dp"
+                                android:textColor="@color/st_muted"
+                                android:textSize="13sp"
+                                android:lineSpacingExtra="4dp"
                                 android:visibility="gone" />
+
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Progress skripsi -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        app:cardBackgroundColor="@color/st_deep"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="2dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Progres Pengerjaan"
+                                android:textColor="#DCE8F5"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="8dp"
+                                android:text="Pantau perkembangan skripsi Anda"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
 
                             <com.google.android.material.progressindicator.LinearProgressIndicator
                                 android:id="@+id/lpi"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="14dp"
-                                android:max="100" />
+                                android:layout_marginTop="20dp"
+                                android:max="100"
+                                app:indicatorColor="#DCE8F5"
+                                app:trackColor="#5D83B0"
+                                app:trackThickness="9dp" />
 
                             <TextView
                                 android:id="@+id/tvProgress"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="4dp"
-                                android:textSize="12sp" />
+                                android:layout_marginTop="10dp"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:layout_width="wrap_content"
+                    <!-- Timeline -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="Timeline tahapan"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="26dp"
+                        android:layout_marginBottom="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Timeline Tahapan"
+                                android:textColor="@color/st_deep"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="Perjalanan penyelesaian skripsi"
+                                android:textColor="@color/st_muted"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:padding="7dp"
+                            android:background="#E7EFF8"
+                            android:src="@drawable/bg_dot"
+                            android:contentDescription="Timeline"
+                            app:tint="#315F91" />
+
+                    </LinearLayout>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvStages"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false" />
+                        android:nestedScrollingEnabled="false"
+                        android:overScrollMode="never" />
 
                     <TextView
                         android:id="@+id/tvEmpty"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:padding="20dp"
+                        android:gravity="center"
                         android:text="Belum ada tahapan."
-                        android:textColor="#757575"
+                        android:textColor="@color/st_muted"
+                        android:textSize="13sp"
                         android:visibility="gone" />
+
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
@@ -125,7 +258,8 @@
             android:id="@+id/progressLoading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:indeterminateTint="#315F91" />
 
         <LinearLayout
             android:id="@+id/layoutError"
@@ -136,17 +270,23 @@
             android:orientation="vertical"
             android:padding="24dp"
             android:visibility="gone">
+
             <TextView
                 android:id="@+id/tvError"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center" />
+                android:gravity="center"
+                android:textColor="@color/st_muted"
+                android:textSize="14sp" />
+
             <Button
                 android:id="@+id/btnRetry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Coba lagi" />
+
         </LinearLayout>
+
     </FrameLayout>
 </LinearLayout>
