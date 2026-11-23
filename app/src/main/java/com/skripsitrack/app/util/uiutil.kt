@@ -11,6 +11,10 @@ import com.skripsitrack.app.R
 import com.skripsitrack.app.SkripsiApp
 import com.skripsitrack.app.ui.auth.LoginActivity
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updatePadding
 
 fun Context.redirectToLogin(message: String? = null) {
     SkripsiApp.session.clear()
@@ -81,3 +85,14 @@ fun initialsOf(name: String): String =
     name.trim().split(Regex("\\s+")).filter { it.isNotEmpty() }
         .take(2).joinToString("") { it.first().uppercase() }
         .ifEmpty { "?" }
+
+/** Beri jarak di atas supaya toolbar tidak menempel ke status bar HP. */
+fun View.applyStatusBarInset() {
+    val baseHeight = layoutParams?.height ?: -2
+    ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+        val top = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+        v.updatePadding(top = top)
+        if (baseHeight > 0) v.updateLayoutParams { height = baseHeight + top }
+        insets
+    }
+}

@@ -120,6 +120,8 @@ class DashboardFragment : Fragment() {
         val isDosen = SkripsiApp.session.getRole() == "dosen"
         val noThesis = data.total_skripsi == 0
 
+        b.cardDeadline.isVisible = !isDosen
+ 
         binding.cardProgress.isVisible = !noThesis
         binding.tvEmptyThesis.isVisible = noThesis
         binding.tvEmptyThesis.text = if (isDosen) {

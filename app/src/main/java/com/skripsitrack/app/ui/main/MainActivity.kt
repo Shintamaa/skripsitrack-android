@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.main
 
+import com.skripsitrack.app.util.applyStatusBarInset
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.OnBackPressedCallback
@@ -26,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        binding.container.applyStatusBarInset()  
 
         val isDosen = SkripsiApp.session.getRole() == "dosen"
         if (isDosen) {

@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.auth
 
+import com.skripsitrack.app.util.applyStatusBarInset
 import android.content.Intent
 import android.os.Bundle
 import android.util.Patterns
@@ -30,6 +31,7 @@ class RegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(b.root)
+        b.toolbar.applyStatusBarInset()
 
         window.statusBarColor = ContextCompat.getColor(this, R.color.st_deep)
         WindowCompat.getInsetsController(window, window.decorView)

@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.applyStatusBarInset
 import android.app.Activity
 import android.os.Bundle
 import android.view.View
@@ -47,6 +48,7 @@ class ThesisFormActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityThesisFormBinding.inflate(layoutInflater)
         setContentView(b.root)
+        b.toolbar.applyStatusBarInset()
 
         b.toolbar.setNavigationOnClickListener { finish() }
 

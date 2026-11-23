@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.applyStatusBarInset
 import com.skripsitrack.app.util.setPillColor
 import android.app.Activity
 import android.content.ActivityNotFoundException
@@ -57,6 +58,7 @@ class StageActivity : AppCompatActivity(), SubmissionAdapter.Callbacks {
         super.onCreate(savedInstanceState)
         b = ActivityStageBinding.inflate(layoutInflater)
         setContentView(b.root)
+        b.toolbar.applyStatusBarInset()
 
         stageId = intent.getIntExtra("stage_id", 0)
         b.toolbar.title = intent.getStringExtra("stage_name") ?: "Tahapan"

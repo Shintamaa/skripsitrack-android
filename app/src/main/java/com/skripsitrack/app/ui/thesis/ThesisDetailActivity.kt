@@ -1,5 +1,6 @@
 package com.skripsitrack.app.ui.thesis
 
+import com.skripsitrack.app.util.applyStatusBarInset
 import com.skripsitrack.app.util.setPillColor
 import android.app.Activity
 import android.content.Intent
@@ -41,6 +42,7 @@ class ThesisDetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         b = ActivityThesisDetailBinding.inflate(layoutInflater)
         setContentView(b.root)
+        b.toolbar.applyStatusBarInset()
 
         thesisId = intent.getIntExtra("thesis_id", 0)
         b.toolbar.setNavigationOnClickListener { finish() }
