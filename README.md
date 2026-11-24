@@ -4,7 +4,7 @@
 
 Aplikasi Android **SkripsiTrack**, Sistem Monitoring Progres Tugas Akhir Berbasis Android. Project UAS mata kuliah Pengembangan Aplikasi Perangkat Bergerak (PAPB).
 
-Aplikasi ini berpasangan dengan backend [`skripsitrack-api`](https://github.com/USERNAME/skripsitrack-api) (Laravel REST API + MySQL). **Backend harus berjalan agar aplikasi dapat dipakai.**
+Aplikasi ini berpasangan dengan backend [`skripsitrack-api`](https://github.com/Shintamaa/skripsitrack-api) (Laravel REST API + MySQL). **Backend harus berjalan agar aplikasi dapat dipakai.**
 
 ---
 
@@ -26,7 +26,7 @@ Buka Laragon, klik **Start All**, lalu buka terminal:
 
 ```bash
 cd C:\laragon\www
-git clone https://github.com/USERNAME/skripsitrack-api.git
+git clone https://github.com/Shintamaa/skripsitrack-api.git
 cd skripsitrack-api
 composer install
 copy .env.example .env
@@ -40,7 +40,7 @@ DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=skripsitrack
-DB_USERNAME=root
+DB_Shintamaa=root
 DB_PASSWORD=
 
 DOSEN_INVITE_CODE=DOSEN2026
