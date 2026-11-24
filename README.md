@@ -87,6 +87,6 @@ Buka `http://192.168.1.110:8000/api/me` di browser HP (ganti dengan IP Anda). Ji
 
 ### Langkah 2: Pasang APK dari Releases (di HP)
 
-1. Buka halaman rilis terbaru: **[Releases → latest](https://github.com/USERNAME/skripsitrack-android/releases/latest)**.
+1. Buka halaman rilis terbaru: **[Releases → latest](https://github.com/USERNAME/skripsitrack-android/releases)**.
 2. Unduh file `SkripsiTrack-v1.1.apk`.
 3. Buka file tersebut. Jika diminta, izinkan **instalasi dari sumber tidak dikenal** untuk browser atau pengelola file
