@@ -36,6 +36,9 @@ php artisan key:generate
 Buat database kosong bernama `skripsitrack` (lewat HeidiSQL atau phpMyAdmin). Pastikan isi `.env` sesuai:
 
 ```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
 DB_DATABASE=skripsitrack
 DB_USERNAME=root
 DB_PASSWORD=
